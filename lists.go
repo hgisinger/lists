@@ -1,9 +1,13 @@
 package lists
 
+import (
+	"constraints"
+)
+
 // All returns true if pred(elem) returns true for all elements in list, otherwise false. The Pred function must return a boolean.
 func All[T any](pred func(T) bool, list []T) bool {
 	for _, v := range list {
-		if !Pred(v) {
+		if !pred(v) {
 			return false
 		}
 	}
@@ -51,7 +55,7 @@ func DropLast[T comparable](list []T) ([]T, bool) {
 func DropWhile[T any](pred func(T) bool, list []T) []T {
 	for i, v := range list {
 		if !pred(v) {
-			return list[:i]
+			return list[i:]
 		}
 	}
 	return []T{}
@@ -108,7 +112,7 @@ func Flatten[T any](lists [][]T) []T {
 
 // FoldL calls fun(t, acc) on successive elements list, starting with acc. fun must return a new accumulator, which is passed to the next call. The function returns the final value of the accumulator.
 func FoldL[T any](fun func(T, T) T, acc T, list []T) T {
-	for _, v := range list[1:] {
+	for _, v := range list {
 		acc = fun(v, acc)
 	}
 	return acc
@@ -164,7 +168,7 @@ func MapFoldL[T any, U any](fun func(T, T) (U, T), acc T, list []T) ([]U, T) {
 	var newList []U
 	for _, v := range list {
 		var u U
-		u, acc = f(v, acc)
+		u, acc = fun(v, acc)
 		newList = append(newList, u)
 	}
 	return newList, acc
@@ -182,6 +186,19 @@ func MapFoldR[T any, U any](fun func(T, T) (U, T), acc T, list []T) ([]U, T) {
 }
 
 // Max returns the first element of List that compares greater than or equal to all other elements of List.
+func Max[T constraints.Ordered](list []T) (T, bool) {
+	if len(list) == 0 {
+		var empty T
+		return empty, false
+	}
+	max := list[0]
+	for _, v := range list {
+		if v > max {
+			max = v
+		}
+	}
+	return max, true
+}
 
 // Member returns true if t matches some element of List, otherwise false.
 func Member[T comparable](t T, list []T) bool {
@@ -194,8 +211,26 @@ func Member[T comparable](t T, list []T) bool {
 }
 
 // Merge returns the sorted list formed by merging all the sublists. All sublists must be sorted before evaluating this function. When two elements compare equal, the element from the sublist with the lowest position is picked before the other element.
+func Merge[T comparable](lists [][]T) []T {
+	var newList []T
+
+	return newList
+}
 
 // Min returns the first element of List that compares less than or equal to all other elements of List.
+func Min[T constraints.Ordered](list []T) (T, bool) {
+	if len(list) == 0 {
+		var empty T
+		return empty, false
+	}
+	min := list[0]
+	for _, v := range list {
+		if v < min {
+			min = v
+		}
+	}
+	return min, true
+}
 
 // Nth returns the Nth element of List.
 func Nth[T any](n int, list []T) (T, bool) {
