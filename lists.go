@@ -19,11 +19,11 @@ func Any[T any](f func(T) bool, list []T) bool {
 }
 
 func Concat[T any](lists ...[]T) []T {
-	var result []T
+	var newList []T
 	for _, list := range lists {
-		result = append(result, list...)
+		newList = append(newList, list...)
 	}
-	return result
+	return newList
 }
 
 func Delete[T comparable](list []T, t T) []T {
@@ -54,11 +54,11 @@ func DropWhile[T any](list []T, f func(T) bool) []T {
 }
 
 func Duplicate[T any](t T, n int) []T {
-	var result []T
+	var newList []T
 	for i := 0; i < n; i++ {
-		result = append(result, t)
+		newList = append(newList, t)
 	}
-	return result
+	return newList
 }
 
 func Filter[T any](f func(T) bool, list []T) []T {
@@ -90,11 +90,11 @@ func FlatMap[T any, U any](f func(T) []U, list []T) []U {
 }
 
 func Flatten[T any](list [][]T) []T {
-	var result []T
+	var newList []T
 	for _, v := range list {
-		result = append(result, v...)
+		newList = append(newList, v...)
 	}
-	return result
+	return newList
 }
 
 func FoldL[T any](f func(T, T) T, acc T, list []T) T {
@@ -118,14 +118,14 @@ func ForEach[T any](f func(T), list []T) {
 }
 
 func Join[T any](sep T, list []T) []T {
-	var result []T
+	var newList []T
 	for i, v := range list {
 		if i > 0 {
-			result = append(result, sep)
+			newList = append(newList, sep)
 		}
-		result = append(result, v)
+		newList = append(newList, v)
 	}
-	return result
+	return newList
 }
 
 func Last[T any](list []T) T {
@@ -141,23 +141,23 @@ func Map[T any, U any](f func(T) U, list []T) []U {
 }
 
 func MapFoldL[T any, U any](f func(T, T) (U, T), acc T, list []T) ([]U, T) {
-	var result []U
+	var newList []U
 	for _, v := range list {
 		var u U
 		u, acc = f(v, acc)
-		result = append(result, u)
+		newList = append(newList, u)
 	}
-	return result, acc
+	return newList, acc
 }
 
 func MapFoldR[T any, U any](f func(T, T) (U, T), acc T, list []T) ([]U, T) {
-	var result []U
+	var newList []U
 	for i := len(list) - 1; i >= 0; i-- {
 		var u U
 		u, acc = f(list[i], acc)
-		result = append(result, u)
+		newList = append(newList, u)
 	}
-	return result, acc
+	return newList, acc
 }
 
 // Max
