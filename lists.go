@@ -242,8 +242,12 @@ func Nth[T any](n int, list []T) (T, bool) {
 }
 
 // NthTail returns the Nth tail of List, that is, the sublist of list starting at N+1 and continuing up to the end of the list.
-func NthTail[T any](n int, list []T) []T {
-	return list[n+1:]
+func NthTail[T any](n int, list []T) ([]T, bool) {
+	if n >= len(list) {
+		var empty []T
+		return empty, false
+	}
+	return list[n+1:], true
 }
 
 // Partition partitions list into two lists, where the first list contains all elements for which pred(elem) returns true, and the second list contains all elements for which pred(elem) returns false.

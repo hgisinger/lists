@@ -123,6 +123,36 @@ func TestFoldR(t *testing.T) {
 	}
 }
 
+func TestForEach(t *testing.T) {
+	all := ""
+	ForEach(func(x string) { all += x }, []string{"1", "2", "3"})
+	if all != "123" {
+		t.Error(`func(x string) {all += x}, []string{"1", "2", "3"} != "123"`)
+	}
+}
+
+func TestJoin(t *testing.T) {
+	result := Join(",", []string{"1", "2", "3"})
+	if result[0] != "1" ||
+		result[1] != "," ||
+		result[2] != "2" ||
+		result[3] != "," ||
+		result[4] != "3" {
+		t.Error(`Join([]string{",", "1", "2", "3"}) != "1,2,3"`)
+	}
+}
+
+func TestLast(t *testing.T) {
+	result, ok := Last([]int{1, 2, 3})
+	if !ok || result != 3 {
+		t.Error("Last([]int{1, 2, 3}) != 3")
+	}
+	result, ok = Last([]int{})
+	if ok {
+		t.Error("Last([]int{}) != false")
+	}
+}
+
 func TestMap(t *testing.T) {
 	doubles := Map(func(x int) int { return x * 2 }, []int{1, 2, 3})
 	if doubles[0] != 2 || doubles[1] != 4 || doubles[2] != 6 {
@@ -131,6 +161,26 @@ func TestMap(t *testing.T) {
 	toString := Map(strconv.Itoa, []int{1, 2, 3})
 	if toString[0] != "1" || toString[1] != "2" || toString[2] != "3" {
 		t.Error(`Map(strconv.Itoa, []int{1, 2, 3}) != []string{"1", "2", "3"}`)
+	}
+}
+
+func TestMapFoldL(t *testing.T) {
+	list, result := MapFoldL(func(a, b int) (string, int) { return "n-" + strconv.Itoa(a), a + b }, 0, []int{1, 2, 3})
+	if list[0] != "n-1" || list[1] != "n-2" || list[2] != "n-3" {
+		t.Error(`MapFoldL(fun, 0, []int{1, 2, 3}) != []string{"n-1", "n-2", "n-3"}`)
+	}
+	if result != 6 {
+		t.Error("MapFoldL(fun, 0, []int{1, 2, 3}) != 6")
+	}
+}
+
+func TestMapFoldR(t *testing.T) {
+	list, result := MapFoldR(func(a, b int) (string, int) { return "n-" + strconv.Itoa(a), a + b }, 0, []int{1, 2, 3})
+	if list[0] != "n-3" || list[1] != "n-2" || list[2] != "n-1" {
+		t.Error(`MapFoldL(fun, 0, []int{1, 2, 3}) != []string{"n-3", "n-2", "n-1"}`)
+	}
+	if result != 6 {
+		t.Error("MapFoldL(fun, 0, []int{1, 2, 3}) != 6")
 	}
 }
 
@@ -146,5 +196,62 @@ func TestMax(t *testing.T) {
 	m3, _ := Max([]string{"a", "b", "c"})
 	if m3 != "c" {
 		t.Error(`Max([]string{"a", "b", "c"}) != "c"`)
+	}
+}
+
+func TestMember(t *testing.T) {
+	if !Member(2, []int{1, 2, 3}) {
+		t.Error("Member(2, []int{1, 2, 3}) != true")
+	}
+	if Member(2, []int{1, 3}) {
+		t.Error("Member(2, []int{1, 3}) != false")
+	}
+}
+
+func TestMin(t *testing.T) {
+	m1, _ := Min([]int{1, 2, 3})
+	if m1 != 1 {
+		t.Error("Min([]int{1, 2, 3}) != 1")
+	}
+	m2, _ := Min([]float64{1.0, 2.0, 3.0})
+	if m2 != 1.0 {
+		t.Error("Min([]float64{1.0, 2.0, 3.0}) != 1.0")
+	}
+	m3, _ := Min([]string{"a", "b", "c"})
+	if m3 != "a" {
+		t.Error(`Min([]string{"a", "b", "c"}) != "a"`)
+	}
+}
+
+func TestNth(t *testing.T) {
+	n1, _ := Nth(0, []int{1, 2, 3})
+	if n1 != 1 {
+		t.Error("Nth(0, []int{1, 2, 3}) != 1")
+	}
+	n2, _ := Nth(2, []int{1, 2, 3})
+	if n2 != 3 {
+		t.Error("Nth(2, []int{1, 2, 3}) != 3")
+	}
+}
+
+func TestNthTail(t *testing.T) {
+	n1, ok := NthTail(0, []int{1, 2, 3})
+	if !ok || n1[0] != 2 || n1[1] != 3 {
+		t.Error("NthTail(0, []int{1, 2, 3}) != []int{2, 3}")
+	}
+	n2, ok := NthTail(1, []int{1, 2, 3})
+	if !ok || n2[0] != 3 {
+		t.Error("NthTail(1, []int{1, 2, 3}) != []int{3}")
+	}
+	_, ok = NthTail(3, []int{1, 2, 3})
+	if ok {
+		t.Error("NthTail(3, []int{1, 2, 3}) != false")
+	}
+}
+
+func TestPartition(t *testing.T) {
+	p1, p2 := Partition(func(x int) bool { return x%2 == 0 }, []int{1, 2, 3, 4, 5})
+	if p1[0] != 2 || p1[1] != 4 || p2[0] != 1 || p2[1] != 3 || p2[2] != 5 {
+		t.Error(`Partition(func(x int) bool { return x%2 == 0 }, []int{1, 2, 3, 4, 5}) != []int{{2, 4}, []int{1, 3, 5}`)
 	}
 }
