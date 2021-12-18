@@ -211,7 +211,7 @@ func Member[T comparable](t T, list []T) bool {
 }
 
 // Merge returns the sorted list formed by merging all the sublists. All sublists must be sorted before evaluating this function. When two elements compare equal, the element from the sublist with the lowest position is picked before the other element.
-func Merge[T comparable](lists [][]T) []T {
+func Merge[T comparable](lists ...[]T) []T {
 	var newList []T
 
 	return newList
@@ -263,4 +263,110 @@ func Partition[T any](pred func(T) bool, list []T) ([]T, []T) {
 	return left, right
 }
 
-// Prefix
+// Prefix returns true if list1 is a prefix of list2, otherwise false.
+func Prefix[T comparable](list1 []T, list2 []T) bool {
+	if len(list1) > len(list2) {
+		return false
+	}
+	for i, v := range list1 {
+		if v != list2[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// Reverse returns a list with the elements in list in reverse order.
+func Reverse[T any](list []T) []T {
+	var newList []T
+	for i := len(list) - 1; i >= 0; i-- {
+		newList = append(newList, list[i])
+	}
+	return newList
+}
+
+// Search returns the first value in list such that pred(value) returns true. The pred function must return a boolean.
+func Search[T any](pred func(T) bool, list []T) (T, bool) {
+	for _, v := range list {
+		if pred(v) {
+			return v, true
+		}
+	}
+	var empty T
+	return empty, false
+}
+
+// Seq returns a sequence of integers that starts with from and contains the successive results of adding incr to the previous element, until to is reached or passed (in the latter case, to is not an element of the sequence).
+func Seq(from, to, incr int) []int {
+	var newList []int
+	for i := from; i <= to; i += incr {
+		newList = append(newList, i)
+	}
+	return newList
+}
+
+// Split pplits list into two lists. First list contains the first N elements and the second list the remaining elements
+func Split[T any](n int, list []T) ([]T, []T) {
+	if n >= len(list) {
+		return list, []T{}
+	}
+	return list[0:n], list[n:]
+}
+
+// SplitWith partitions List into two lists according to pred.
+func SplitWith[T any](pred func(T) bool, list []T) ([]T, []T) {
+	var left, right []T
+	i := 0
+	for i = 0; i < len(list) && pred(list[i]); i++ {
+		left = append(left, list[i])
+	}
+	for i < len(list) {
+		right = append(right, list[i])
+		i++
+	}
+	return left, right
+}
+
+// Sublist returns the sublist of list starting at start and with (maximum) length elements. It is not an error for start+length to exceed the length of the list.
+func Sublist[T any](start, length int, list []T) []T {
+	if start+length > len(list) {
+		length = len(list) - start
+	}
+	return list[start : start+length]
+}
+
+// Suffix returns true if list1 is a suffix of list2, otherwise false.
+func Suffix[T comparable](list1 []T, list2 []T) bool {
+	if len(list1) > len(list2) {
+		return false
+	}
+	for i, v := range list1 {
+		if v != list2[len(list2)-len(list1)+i] {
+			return false
+		}
+	}
+	return true
+}
+
+// Sum returns the sum of the elements in List.
+/*
+func Sum[T numeric](list []T) T {
+	var sum T
+	for _, v := range list {
+		sum += v
+	}
+	return sum
+}
+*/
+
+// TakeWhile takes elements from list while pred(Elem) returns true, that is, the function returns the longest prefix of the list for which all elements satisfy the predicate. The pred function must return a boolean.
+func TakeWhile(pred func(x int) bool, list []int) []int {
+	var result []int
+	for _, x := range list {
+		if !pred(x) {
+			break
+		}
+		result = append(result, x)
+	}
+	return result
+}

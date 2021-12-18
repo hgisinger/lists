@@ -197,6 +197,10 @@ func TestMax(t *testing.T) {
 	if m3 != "c" {
 		t.Error(`Max([]string{"a", "b", "c"}) != "c"`)
 	}
+	_, ok := Max([]string{})
+	if ok {
+		t.Error(`Max([]string{}) != false`)
+	}
 }
 
 func TestMember(t *testing.T) {
@@ -206,6 +210,10 @@ func TestMember(t *testing.T) {
 	if Member(2, []int{1, 3}) {
 		t.Error("Member(2, []int{1, 3}) != false")
 	}
+}
+
+func TestMerge(t *testing.T) {
+	Merge([]int{1, 2, 3}, []int{4, 5, 6})
 }
 
 func TestMin(t *testing.T) {
@@ -221,6 +229,10 @@ func TestMin(t *testing.T) {
 	if m3 != "a" {
 		t.Error(`Min([]string{"a", "b", "c"}) != "a"`)
 	}
+	_, ok := Min([]string{})
+	if ok {
+		t.Error(`Min([]string{}) != false`)
+	}
 }
 
 func TestNth(t *testing.T) {
@@ -231,6 +243,10 @@ func TestNth(t *testing.T) {
 	n2, _ := Nth(2, []int{1, 2, 3})
 	if n2 != 3 {
 		t.Error("Nth(2, []int{1, 2, 3}) != 3")
+	}
+	_, ok := Nth(4, []int{1, 2, 3})
+	if ok {
+		t.Error("Nth(4, []int{1, 2, 3}) != false")
 	}
 }
 
@@ -253,5 +269,91 @@ func TestPartition(t *testing.T) {
 	p1, p2 := Partition(func(x int) bool { return x%2 == 0 }, []int{1, 2, 3, 4, 5})
 	if p1[0] != 2 || p1[1] != 4 || p2[0] != 1 || p2[1] != 3 || p2[2] != 5 {
 		t.Error(`Partition(func(x int) bool { return x%2 == 0 }, []int{1, 2, 3, 4, 5}) != []int{{2, 4}, []int{1, 3, 5}`)
+	}
+}
+
+func TestPrefix(t *testing.T) {
+	if !Prefix([]int{1, 2, 3}, []int{1, 2, 3, 4, 5}) {
+		t.Error(`Prefix([]int{1, 2, 3}, []int{1, 2, 3, 4, 5}) != true`)
+	}
+	if Prefix([]int{1, 2, 3}, []int{1, 3, 4, 5}) {
+		t.Error(`Prefix([]int{1, 2, 3}, []int{1, 3, 4, 5}) != false`)
+	}
+}
+
+func TestReverse(t *testing.T) {
+	r1 := Reverse([]int{1, 2, 3})
+	if r1[0] != 3 || r1[1] != 2 || r1[2] != 1 {
+		t.Error(`Reverse([]int{1, 2, 3}) != []int{3, 2, 1}`)
+	}
+}
+
+func TestSearch(t *testing.T) {
+	s1, _ := Search(func(x int) bool { return x > 2 }, []int{1, 2, 3, 4, 5})
+	if s1 != 3 {
+		t.Error(`Search(func(x int) bool { return x > 2 }, []int{1, 2, 3, 4, 5}) != 3`)
+	}
+	_, ok := Search(func(x int) bool { return x > 5 }, []int{1, 2, 3, 4, 5})
+	if ok {
+		t.Error(`Search(func(x int) bool { return x > 5 }, []int{1, 2, 3, 4, 5}) != false`)
+	}
+}
+
+func TestSeq(t *testing.T) {
+	s1 := Seq(1, 10, 3)
+	if s1[0] != 1 || s1[1] != 4 || s1[2] != 7 || s1[3] != 10 {
+		t.Error(`Seq(1, 10, 3) != []int{1, 4, 7, 10}`)
+	}
+}
+
+func TestSplit(t *testing.T) {
+	s1, s2 := Split(3, []int{1, 2, 3, 4, 5})
+	if s1[0] != 1 || s1[1] != 2 || s1[2] != 3 || s2[0] != 4 || s2[1] != 5 {
+		t.Error(`SplitAt(3, []int{1, 2, 3, 4, 5}) != [][]int{{1, 2, 3}, {4, 5}}`)
+	}
+}
+
+func TestSpliWith(t *testing.T) {
+	s1, s2 := SplitWith(func(x int) bool { return x%2 != 0 }, []int{1, 2, 3, 4, 5})
+	if s1[0] != 1 || s2[0] != 2 || s2[1] != 3 || s2[2] != 4 || s2[3] != 5 {
+		t.Error(`SplitWith(func(x int) bool { return x % 2 != 0 }, []int{1, 2, 3, 4, 5}) != [][]int{{1}, {2, 3, 4, 5}}`)
+	}
+}
+
+func TestSublist(t *testing.T) {
+	s1 := Sublist(1, 2, []int{1, 2, 3})
+	if s1[0] != 2 && s1[1] != 3 {
+		t.Error(`Sublist(1, 2, []int{1, 2, 3}) != []int{2, 3}]`)
+	}
+	s2 := Sublist(1, 4, []int{1, 2, 3})
+	if s2[0] != 2 && s2[1] != 3 {
+		t.Error(`Sublist(1, 4, []int{1, 2, 3}) != []int{2, 3}]`)
+	}
+}
+
+func TestSuffix(t *testing.T) {
+	if Suffix([]int{1, 2, 3}, []int{1, 2, 3, 4, 5}) {
+		t.Error(`Suffix([]int{1, 2, 3}, []int{1, 2, 3, 4, 5}) != false`)
+	}
+	if !Suffix([]int{3, 4, 5}, []int{1, 2, 3, 4, 5}) {
+		t.Error(`Suffix([]int{1, 2, 3}, []int{1, 2, 3, 4, 5}) != true`)
+	}
+}
+
+/*
+func TestSum(t *testing.T) {
+	if Sum([]int{1, 2, 3}) != 6 {
+		t.Error(`Sum([]int{1, 2, 3}) != 6`)
+	}
+	if Sum([]float64{1.0, 2.0, 3.0}) != 6.0 {
+		t.Error(`Sum([]float64{1.0, 2.0, 3.0}) != 6.0`)
+	}
+}
+*/
+
+func TestTakeWhile(t *testing.T) {
+	s1 := TakeWhile(func(x int) bool { return x < 3 }, []int{1, 2, 3, 4, 5})
+	if s1[0] != 1 || s1[1] != 2 {
+		t.Error(`TakeWhile(func(x int) bool { return x < 3 }, []int{1, 2, 3, 4, 5}) != []int{1, 2}`)
 	}
 }
