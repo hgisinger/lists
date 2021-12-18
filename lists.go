@@ -1,14 +1,16 @@
 package lists
 
-func All[T any](f func(T) bool, list []T) bool {
+// All returns true if pred(elem) returns true for all elements in list, otherwise false. The Pred function must return a boolean.
+func All[T any](pred func(T) bool, list []T) bool {
 	for _, v := range list {
-		if !f(v) {
+		if !Pred(v) {
 			return false
 		}
 	}
 	return true
 }
 
+// Any returns true if pred(elem) returns true for for at least one element in list, otherwise false. The Pred function must return a boolean.
 func Any[T any](f func(T) bool, list []T) bool {
 	for _, v := range list {
 		if f(v) {
@@ -18,6 +20,7 @@ func Any[T any](f func(T) bool, list []T) bool {
 	return false
 }
 
+// Concat returns a list in which all the sublists have been appended.
 func Concat[T any](lists ...[]T) []T {
 	var newList []T
 	for _, list := range lists {
@@ -26,6 +29,7 @@ func Concat[T any](lists ...[]T) []T {
 	return newList
 }
 
+// Delete returns a copy of list where the first element matching t is deleted, if there is such an element.
 func Delete[T comparable](list []T, t T) []T {
 	for i, v := range list {
 		if v == t {
@@ -35,18 +39,15 @@ func Delete[T comparable](list []T, t T) []T {
 	return list
 }
 
-func DropLast[T comparable](list []T, t T) []T {
-	for i := len(list) - 1; i >= 0; i-- {
-		if list[i] == t {
-			return append(list[:i], list[i+1:]...)
-		}
-	}
-	return list
+// DropLast drops the last element of a List. The list is to be non-empty, otherwise the function panic.
+func DropLast[T comparable](list []T) []T {
+	return list[:len(list)-1]
 }
 
-func DropWhile[T any](list []T, f func(T) bool) []T {
+// DropWhile drop elements from list while pred(elem) returns true and returns the remaining list. The Pred function must return a boolean.
+func DropWhile[T any](pred func(T) bool, list []T) []T {
 	for i, v := range list {
-		if !f(v) {
+		if !pred(v) {
 			return list[:i]
 		}
 	}
